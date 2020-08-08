@@ -1,0 +1,33 @@
+version: "3"
+
+services:
+  wp-db:
+    image: mysql:5.7
+    networks:
+      - wp-net
+    volumes:
+      - wp-db-volume:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: wp-db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+  wp-app:
+    depends_on:
+      - wp-db
+    image: wordpress
+    networks:
+      - wp-net
+    ports:
+      - 8080:80
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: wp-db
+      WORDPRESS_DB_NAME: wp-db
+      WORDPRESS_DB_USER: root
+      WORDPRESS_DB_PASSWORD: root
+networks:
+  wp-net:
+volumes:
+  wp-db-volume:
